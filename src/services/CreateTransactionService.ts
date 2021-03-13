@@ -11,6 +11,10 @@ class CreateTransactionService {
   public execute({ title, value, type }: Resquest): Transaction {
     const { total } = this.transactionsRepository.getBalance();
 
+    if (type !== 'outcome' && type !== 'income') {
+      throw new Error('Operação inválida');
+    }
+
     if (type === 'outcome' && total < value) {
       throw new Error('Você não tem saldo disponível para essa transação');
     }
