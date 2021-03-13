@@ -8,8 +8,20 @@ class CreateTransactionService {
     this.transactionsRepository = transactionsRepository;
   }
 
-  public execute(): Transaction {
-    // TODO
+  public execute({ title, value, type }: Resquest): Transaction {
+    const { total } = this.transactionsRepository.getBalance();
+
+    if (type === 'outcome' && total < value) {
+      throw new Error('Você não tem saldo disponível para essa transação');
+    }
+
+    const trans = this.transactionsRepository.create({
+      title,
+      value,
+      type,
+    });
+
+    return trans;
   }
 }
 
